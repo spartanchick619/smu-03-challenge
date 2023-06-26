@@ -1,23 +1,50 @@
 // Assignment Code
+var alphaSet = 'abcdefghijklmnopqrstuvxyz';
+var numericSet = '0123456789';
+var specialSet = '!#$%&()*+,-./:;<=>?@[\]^_{|}~';
+var passwordLength = null;
+var incLower = false;
+var incUpper = false;
+var incNum = false;
+var incSpecial = false;
+var strSet = '';
+
 var generateBtn = document.querySelector("#generate");
 
 // Write password to the #password input
 function createPassword() {
-    var passwordLength = lengthPrompt();
-    var password = generatePassword(passwordLength);
+    // Reset the settings
+    strSet = '';
+    // Ask user for the settings
+    passwordLength = lengthPrompt();
+    incLower = confirm("Would you like to include lowercase letters?");
+    incUpper = confirm("Would you like to include uppercase letters?");
+    incNum = confirm("Would you like to include numbers?");
+    incSpecial = confirm("Would you like to include special characters?");
+    // Setup the strSet to be used by the password generator
+    if (!incLower && !incUpper && !incNum && !incSpecial) {
+        alert("You must choose at least one character set. Please try again.")
+    } else {
+        if (incLower) { strSet += alphaSet; }
+        if (incUpper) { var alphaSetUpper = alphaSet.toUpperCase(); strSet += alphaSetUpper; }
+        if (incNum) { strSet += numericSet; }
+        if (incSpecial) { strSet += specialSet; }
+        // Provide confirmation to the user
+        alert("You chose a password " + passwordLength + " characters long.\nInclude Lowercase Letters: " + incLower + "\nInclude Uppercase Letters: " + incUpper + "\nInclude Numbers: " + incNum + "\nInclude Special Characters: " + incSpecial);
+    }
+    // Create the password
+    var password = generatePassword();
+    // Write password to screen
     var passwordText = document.querySelector("#password");
-
     passwordText.value = password;
-
 }
 
-function generatePassword(num) {
-    //TODO: Create Password Generation Routine and call it randomPassword
-    var randomPassword = '';
-    for (var i = 0; i < num; i++) {
-        randomPassword += getRandomCharacter();
+function generatePassword() {
+    let randomPassword = '';
+    for (var i = 0; i < passwordLength; i++) {
+        var char = Math.floor(Math.random() * strSet.length + 1);
+        randomPassword += strSet.charAt(char);
     }
-
     return randomPassword;
 }
 
@@ -38,14 +65,6 @@ function lengthPrompt() {
             alert("Invalid input.");
         }
     }
-}
-
-function characterTypePrompt() {
-    return;
-}
-
-function getRandomCharacter() {
-    return String.fromCharCode(Math.floor(Math.random() * 77) + 34);
 }
 
 // Add event listener to generate button
